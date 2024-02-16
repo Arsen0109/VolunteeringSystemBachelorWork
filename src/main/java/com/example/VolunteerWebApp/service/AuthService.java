@@ -36,10 +36,16 @@ public class AuthService {
         userRepository.save(user);
 
         String token = generateVerificationToken(user);
-//
-//        mailService.sendMail(new NotificationEmail("Account activation", user.getEmail(),
-//                "Thank you for signing up. Please click on this lind for activate your account:" +
-//                        " http://localhost:8080/api/auth/accountVerification/" + token ));
+
+        mailService.sendMail(new NotificationEmail("Account activation", user.getEmail(),
+                "Thank you for signing up. Please click on this lind for activate your account:" +
+                        " http://localhost:8080/api/auth/accountVerification/" + token ));
+    }
+
+    public void activateUser(String token) {
+        User user = verificationTokenRepository.findByToken(token).orElseThrow().getUser();
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 
     @Transactional

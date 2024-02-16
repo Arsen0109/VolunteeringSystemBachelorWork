@@ -22,7 +22,7 @@ public class MailService {
             mimeMessageHelper.setFrom("helpother@email.com");
             mimeMessageHelper.setTo(notificationEmail.getReceiver());
             mimeMessageHelper.setSubject(notificationEmail.getTopic());
-            mimeMessageHelper.setText(mailContentBuilder.build(notificationEmail.getBody()));
+            mimeMessageHelper.setText(mailContentBuilder.build(notificationEmail.getBody()), true);
         };
         try {
             mailSender.send(messagePreparator);
