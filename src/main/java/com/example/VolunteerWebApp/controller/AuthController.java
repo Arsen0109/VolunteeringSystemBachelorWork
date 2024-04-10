@@ -1,5 +1,7 @@
 package com.example.VolunteerWebApp.controller;
 
+import com.example.VolunteerWebApp.DTO.AuthResponse;
+import com.example.VolunteerWebApp.DTO.LoginRequest;
 import com.example.VolunteerWebApp.DTO.RegisterRequest;
 import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.service.AuthService;
@@ -24,5 +26,10 @@ public class AuthController {
     public ResponseEntity<String> activateUser(@PathVariable String verificationToken) {
         authService.activateUser(verificationToken);
         return new ResponseEntity<String>("Account activated succesfully", HttpStatus.OK);
+    }
+
+    @PostMapping("login")
+    public AuthResponse login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
     }
 }
