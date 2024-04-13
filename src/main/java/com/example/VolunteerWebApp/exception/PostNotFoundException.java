@@ -1,4 +1,4 @@
-package com.example.VolunteerWebApp.Exception;
+package com.example.VolunteerWebApp.exception;
 
 public class PostNotFoundException extends RuntimeException {
     public PostNotFoundException(String exMessage) {

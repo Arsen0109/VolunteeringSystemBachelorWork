@@ -1,4 +1,4 @@
-package com.example.VolunteerWebApp.Exception;
+package com.example.VolunteerWebApp.exception;
 
 public class VolunteeringSystemException extends RuntimeException{
     public VolunteeringSystemException(String exMessage, Exception exception){
