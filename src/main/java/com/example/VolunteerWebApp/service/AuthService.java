@@ -2,6 +2,7 @@ package com.example.VolunteerWebApp.service;
 
 import com.example.VolunteerWebApp.DTO.AuthResponse;
 import com.example.VolunteerWebApp.DTO.LoginRequest;
+import com.example.VolunteerWebApp.DTO.RefreshTokenRequest;
 import com.example.VolunteerWebApp.DTO.RegisterRequest;
 import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.entity.VerificationToken;
@@ -33,6 +34,7 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public void signup(RegisterRequest request) {
@@ -82,6 +84,22 @@ public class AuthService {
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateAuthToken(authentication);
-        return new AuthResponse(token, loginRequest.getUsername());
+        return AuthResponse.builder()
+                .authToken(token)
+                .expiresAt(Instant.now().minusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .username(loginRequest.getUsername())
+                .build();
+    }
+
+    public AuthResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenByUsername(refreshTokenRequest.getUsername());
+        return AuthResponse.builder()
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .authToken(token)
+                .expiresAt(Instant.now().minusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
     }
 }

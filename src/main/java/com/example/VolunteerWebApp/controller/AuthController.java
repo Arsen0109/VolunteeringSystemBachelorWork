@@ -2,12 +2,14 @@ package com.example.VolunteerWebApp.controller;
 
 import com.example.VolunteerWebApp.DTO.AuthResponse;
 import com.example.VolunteerWebApp.DTO.LoginRequest;
+import com.example.VolunteerWebApp.DTO.RefreshTokenRequest;
 import com.example.VolunteerWebApp.DTO.RegisterRequest;
 import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -32,4 +34,9 @@ public class AuthController {
     public AuthResponse login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
+
+    @PostMapping
+    public AuthResponse refreshTokens(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return AuthResponse.builder().build();
+    };
 }
