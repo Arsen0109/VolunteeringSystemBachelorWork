@@ -2,11 +2,8 @@ package com.example.VolunteerWebApp.service;
 
 import com.example.VolunteerWebApp.DTO.CommentRequest;
 import com.example.VolunteerWebApp.DTO.CommentResponse;
-import com.example.VolunteerWebApp.DTO.PostRequest;
-import com.example.VolunteerWebApp.DTO.PostResponse;
 import com.example.VolunteerWebApp.entity.Comment;
 import com.example.VolunteerWebApp.entity.Post;
-import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.exception.CommentNotFoundException;
 import com.example.VolunteerWebApp.exception.PostNotFoundException;
 import com.example.VolunteerWebApp.exception.VolunteeringSystemException;

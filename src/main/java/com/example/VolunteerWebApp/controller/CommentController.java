@@ -1,7 +1,6 @@
 package com.example.VolunteerWebApp.controller;
 
 import com.example.VolunteerWebApp.DTO.CommentRequest;
-import com.example.VolunteerWebApp.DTO.CommentResponse;
 import com.example.VolunteerWebApp.exception.PostNotFoundException;
 import com.example.VolunteerWebApp.service.CommentService;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @AllArgsConstructor

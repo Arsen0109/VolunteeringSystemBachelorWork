@@ -4,13 +4,11 @@ import com.example.VolunteerWebApp.DTO.AuthResponse;
 import com.example.VolunteerWebApp.DTO.LoginRequest;
 import com.example.VolunteerWebApp.DTO.RefreshTokenRequest;
 import com.example.VolunteerWebApp.DTO.RegisterRequest;
-import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.service.AuthService;
 import com.example.VolunteerWebApp.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor

@@ -1,7 +1,5 @@
 package com.example.VolunteerWebApp.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +15,6 @@ import java.security.cert.CertificateException;
 import java.sql.Date;
 import java.time.Instant;
 
-import static io.jsonwebtoken.Jwts.parser;
 
 @Service
 public class JwtProvider {
