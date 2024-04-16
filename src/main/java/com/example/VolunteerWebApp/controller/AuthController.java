@@ -6,6 +6,7 @@ import com.example.VolunteerWebApp.DTO.RefreshTokenRequest;
 import com.example.VolunteerWebApp.DTO.RegisterRequest;
 import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.service.AuthService;
+import com.example.VolunteerWebApp.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("signup")
     public ResponseEntity<String> signup(@RequestBody RegisterRequest request){
@@ -36,7 +38,13 @@ public class AuthController {
     }
 
     @PostMapping
-    public AuthResponse refreshTokens(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        return AuthResponse.builder().build();
-    };
+    public ResponseEntity<AuthResponse> refreshTokens(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.refreshToken(refreshTokenRequest));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
+        return ResponseEntity.status(HttpStatus.OK).body("Refresh Token Deleted Successfully!");
+    }
 }
