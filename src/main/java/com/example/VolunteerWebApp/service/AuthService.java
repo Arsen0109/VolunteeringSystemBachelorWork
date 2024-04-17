@@ -86,7 +86,7 @@ public class AuthService {
         String token = jwtProvider.generateAuthToken(authentication);
         return AuthResponse.builder()
                 .authToken(token)
-                .expiresAt(Instant.now().minusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .refreshToken(refreshTokenService.generateRefreshToken().getToken())
                 .username(loginRequest.getUsername())
                 .build();
@@ -98,7 +98,7 @@ public class AuthService {
         return AuthResponse.builder()
                 .refreshToken(refreshTokenRequest.getRefreshToken())
                 .authToken(token)
-                .expiresAt(Instant.now().minusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(refreshTokenRequest.getUsername())
                 .build();
     }

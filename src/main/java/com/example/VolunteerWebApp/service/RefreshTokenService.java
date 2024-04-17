@@ -27,7 +27,7 @@ public class RefreshTokenService {
         refreshTokenRepository.deleteByToken(token);
     }
 
-    public void validateRefreshToken(String token) {
+    public void validateRefreshToken(String token) throws VolunteeringSystemException {
         refreshTokenRepository.findByToken(token).orElseThrow(() ->
                 new VolunteeringSystemException("Error, not valid refresh token!"));
     }
