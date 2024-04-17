@@ -27,7 +27,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(postRequest));
     }
 
-    @GetMapping("/{postName}")
+    @GetMapping("by-name/{postName}")
     public ResponseEntity<Object> getPostById(@PathVariable String postName) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(postService.getPostByPostName(postName));
