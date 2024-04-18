@@ -82,7 +82,7 @@ public class CommentService {
                 .text(commentRequest.getText())
                 .post(postRepository.findByPostId(commentRequest.getPostId())
                         .orElseThrow(() -> new PostNotFoundException("Error, post with id="
-                                + commentRequest.getPostId() + "not found!")))
+                                + commentRequest.getPostId() + " not found!")))
                 .user(authService.getCurrentUser())
                 .createdDate(Instant.now())
                 .build();
