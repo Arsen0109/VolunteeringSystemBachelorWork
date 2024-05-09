@@ -50,6 +50,7 @@ public class PostService {
         post.setPostName(postRequest.getPostName());
         post.setDescription(postRequest.getDescription());
         post.setMonobankJarLink(postRequest.getMonoBankJarLink());
+        post.setIsOpened(postRequest.getIsOpened());
         return mapPostToPostResponse(postRepository.save(post));
     }
 
@@ -83,6 +84,7 @@ public class PostService {
                 .monobankJarLink(postRequest.getMonoBankJarLink())
                 .description(postRequest.getDescription())
                 .user(authService.getCurrentUser())
+                .isOpened(true)
                 .createdDate(Instant.now())
                 .build();
     }
@@ -93,6 +95,7 @@ public class PostService {
                 .description(post.getDescription())
                 .monoBankJarLink(post.getMonobankJarLink())
                 .username(post.getUser().getUsername())
+                .isOpened(post.getIsOpened())
                 .createdDate(post.getCreatedDate())
                 .build();
     }

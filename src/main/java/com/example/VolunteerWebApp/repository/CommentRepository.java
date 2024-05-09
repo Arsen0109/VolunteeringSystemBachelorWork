@@ -2,6 +2,7 @@ package com.example.VolunteerWebApp.repository;
 
 import com.example.VolunteerWebApp.entity.Comment;
 import com.example.VolunteerWebApp.entity.Post;
+import com.example.VolunteerWebApp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +13,5 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Optional<Comment> findByCommentId(Long commentId);
     List<Comment> findByPost(Post post);
+    List<Comment> findByUser(User user);
 }

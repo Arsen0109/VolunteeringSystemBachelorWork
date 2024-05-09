@@ -4,11 +4,13 @@ import com.example.VolunteerWebApp.DTO.CommentRequest;
 import com.example.VolunteerWebApp.DTO.CommentResponse;
 import com.example.VolunteerWebApp.entity.Comment;
 import com.example.VolunteerWebApp.entity.Post;
+import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.exception.CommentNotFoundException;
 import com.example.VolunteerWebApp.exception.PostNotFoundException;
 import com.example.VolunteerWebApp.exception.VolunteeringSystemException;
 import com.example.VolunteerWebApp.repository.CommentRepository;
 import com.example.VolunteerWebApp.repository.PostRepository;
+import com.example.VolunteerWebApp.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final AuthService authService;
 
     @Transactional
@@ -63,6 +66,10 @@ public class CommentService {
     public CommentResponse deleteComment(Long commentId) throws CommentNotFoundException {
         Comment comment = commentRepository.findByCommentId(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("Error, comment with id=" + commentId + "not found!"));
+        // Throw exception if creator user is not current user
+        if (!comment.getUser().equals(authService.getCurrentUser())) {
+            throw new VolunteeringSystemException("Error, to edit comments can only person who left them!");
+        }
         commentRepository.delete(comment);
         return mapCommentToCommentRes(comment);
     }
@@ -72,6 +79,15 @@ public class CommentService {
         Post post = postRepository.findByPostId(postId).orElseThrow(() ->
                 new PostNotFoundException("Error post with name " + postId + " not found"));
         return commentRepository.findByPost(post)
+                .stream()
+                .map(this::mapCommentToCommentRes)
+                .collect(Collectors.toList());
+    }
+
+    public List<CommentResponse> getCommentsByUserName(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
+                new VolunteeringSystemException("Error, user " + username + " not found!" ));
+        return commentRepository.findByUser(user)
                 .stream()
                 .map(this::mapCommentToCommentRes)
                 .collect(Collectors.toList());

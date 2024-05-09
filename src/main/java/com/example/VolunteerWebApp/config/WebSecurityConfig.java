@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,9 +32,22 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/index.html"))
+                        .permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/**"))
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/post/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/comment/by-post/**")
+                        .permitAll()
+                        .requestMatchers(
+                                "/configuration/ui",
+                                "/v3/api-docs",
+                                "/v3/api-docs.yaml",
+                                "/swagger-resources/**",
+                                "/configuration/security",
+                                "/swagger-ui.html",
+                                "/webjars/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

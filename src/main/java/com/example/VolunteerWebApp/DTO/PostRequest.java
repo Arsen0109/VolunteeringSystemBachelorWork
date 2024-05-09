@@ -11,4 +11,5 @@ public class PostRequest {
     private String postName;
     private String description;
     private String monoBankJarLink;
+    private Boolean isOpened;
 }
