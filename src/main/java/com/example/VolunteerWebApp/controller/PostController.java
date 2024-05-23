@@ -2,6 +2,7 @@ package com.example.VolunteerWebApp.controller;
 
 import com.example.VolunteerWebApp.DTO.PostRequest;
 import com.example.VolunteerWebApp.DTO.PostResponse;
+import com.example.VolunteerWebApp.exception.NotValidCardNumberException;
 import com.example.VolunteerWebApp.exception.PostNotFoundException;
 import com.example.VolunteerWebApp.service.PostService;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,12 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostResponse> createPost(@RequestBody PostRequest postRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(postRequest));
+    public ResponseEntity<Object> createPost(@RequestBody PostRequest postRequest) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(postRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error bad request.");
+        }
     }
 
     @GetMapping("by-name/{postName}")

@@ -19,8 +19,7 @@ public class ParsedPost {
     private Long postId;
     private String postName;
     private String url;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
-
-    private Instant createdDate;
+    private String platformName;
 }

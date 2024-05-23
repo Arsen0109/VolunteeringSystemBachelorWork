@@ -16,6 +16,7 @@ public class PostResponse {
     private long postId;
     private String postName;
     private String description;
+    private String cardNumber;
     private String monoBankJarLink;
     private String username;
     private Boolean isOpened;

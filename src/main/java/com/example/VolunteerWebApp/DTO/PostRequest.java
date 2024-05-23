@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class PostRequest {
     private String postName;
     private String description;
+    private String cardNumber;
     private String monoBankJarLink;
     private Boolean isOpened;
 }

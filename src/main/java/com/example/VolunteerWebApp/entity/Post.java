@@ -16,7 +16,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
     private String postName;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     @Nullable
     private String description;
     @Nullable
@@ -24,6 +24,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
+    private String cardNumber;
     private Boolean isOpened;
     private Instant createdDate;
 }

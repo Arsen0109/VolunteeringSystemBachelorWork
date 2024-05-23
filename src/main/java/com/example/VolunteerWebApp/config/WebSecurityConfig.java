@@ -40,6 +40,8 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/comment/by-post/**")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/parsed-post/**")
+                        .permitAll()
                         .requestMatchers(
                                 "/configuration/ui",
                                 "/v3/api-docs",
