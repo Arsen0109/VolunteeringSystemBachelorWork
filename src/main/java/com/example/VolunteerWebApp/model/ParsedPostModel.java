@@ -13,7 +13,8 @@ import java.time.Instant;
 public class ParsedPostModel {
     private String postName;
     private String url;
-    @Lob
     private String description;
     private String platformName;
+
+    private String iconUrl;
 }

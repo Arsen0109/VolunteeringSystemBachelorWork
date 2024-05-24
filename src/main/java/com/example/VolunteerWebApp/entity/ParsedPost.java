@@ -22,4 +22,6 @@ public class ParsedPost {
     @Column(columnDefinition = "TEXT")
     private String description;
     private String platformName;
+    @Column(columnDefinition = "TEXT")
+    private String iconUrl;
 }
