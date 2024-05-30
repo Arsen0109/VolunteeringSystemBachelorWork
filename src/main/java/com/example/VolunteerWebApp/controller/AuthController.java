@@ -4,6 +4,7 @@ import com.example.VolunteerWebApp.DTO.AuthResponse;
 import com.example.VolunteerWebApp.DTO.LoginRequest;
 import com.example.VolunteerWebApp.DTO.RefreshTokenRequest;
 import com.example.VolunteerWebApp.DTO.RegisterRequest;
+import com.example.VolunteerWebApp.exception.VolunteeringSystemException;
 import com.example.VolunteerWebApp.service.AuthService;
 import com.example.VolunteerWebApp.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
@@ -20,8 +21,13 @@ public class AuthController {
 
     @PostMapping("signup")
     public ResponseEntity<String> signup(@RequestBody RegisterRequest request){
-        authService.signup(request);
-        return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+        try {
+            authService.signup(request);
+            return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+        } catch (VolunteeringSystemException e) {
+            return new ResponseEntity<>("Error, user already exists", HttpStatus.NOT_ACCEPTABLE);
+        }
+
     }
 
     @GetMapping("accountVerification/{verificationToken}")

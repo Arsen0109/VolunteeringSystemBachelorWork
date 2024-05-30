@@ -51,6 +51,10 @@ public class WebSecurityConfig {
                                 "/swagger-ui.html",
                                 "/webjars/**")
                         .permitAll()
+                        .requestMatchers("/api/parsed-post")
+                        .hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/parsed-post")
+                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .httpBasic(Customizer.withDefaults());

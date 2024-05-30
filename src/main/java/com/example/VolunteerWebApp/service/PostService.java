@@ -6,11 +6,15 @@ import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.exception.NotValidCardNumberException;
 import com.example.VolunteerWebApp.exception.PostNotFoundException;
 import com.example.VolunteerWebApp.entity.Post;
+import com.example.VolunteerWebApp.exception.VolunteeringSystemException;
+import com.example.VolunteerWebApp.model.MonoBankJarRequest;
 import com.example.VolunteerWebApp.repository.PostRepository;
 import com.example.VolunteerWebApp.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 import java.util.List;
@@ -48,10 +52,15 @@ public class PostService {
     public PostResponse updatePost(Long postId, PostRequest postRequest) throws PostNotFoundException {
         Post post = postRepository.findByPostId(postId)
                 .orElseThrow(() -> new PostNotFoundException("Error, can not find post with postId: " + postId));
+        // Throw exception if creator user is not current user
+        if (!post.getUser().equals(authService.getCurrentUser()) && !authService.getCurrentUser().isAdmin()) {
+            throw new VolunteeringSystemException("Error, to edit comments can only person who left them!");
+        }
         post.setPostName(postRequest.getPostName());
         post.setDescription(postRequest.getDescription());
         post.setMonobankJarLink(postRequest.getMonoBankJarLink());
         post.setIsOpened(postRequest.getIsOpened());
+        post.setCardNumber(postRequest.getCardNumber());
         return mapPostToPostResponse(postRepository.save(post));
     }
 
@@ -59,6 +68,9 @@ public class PostService {
     public PostResponse deletePost(Long postId) throws PostNotFoundException {
         Post post = postRepository.findByPostId(postId).orElseThrow(() ->
                 new PostNotFoundException("Error, can not find post with postId: " + postId));
+        if (!post.getUser().equals(authService.getCurrentUser()) && !authService.getCurrentUser().isAdmin()) {
+            throw new VolunteeringSystemException("Error, to edit comments can only person who left them!");
+        }
         postRepository.delete(post);
         return mapPostToPostResponse(post);
     }
@@ -77,6 +89,27 @@ public class PostService {
     public PostResponse getPostByPostName(String postName) {
         return mapPostToPostResponse(postRepository.findByPostName(postName).orElseThrow(() ->
                 new PostNotFoundException("Error post with name " + postName + " not found!")));
+    }
+
+    public ResponseEntity<Object> getMonoBankJarProgress(String monoBankClientId) {
+        String url = "https://send.monobank.ua/api/handler";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
+        // Створення об'єкта HttpEntity з заголовками і тілом запиту
+        HttpEntity<MonoBankJarRequest> request = new HttpEntity<>(new MonoBankJarRequest(monoBankClientId), headers);
+
+        // Надсилання запиту
+        ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.POST, request, Object.class);
+
+        // Отримання і обробка відповіді
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        } else {
+            throw new RuntimeException("Failed to send POST request: " + response.getStatusCode());
+        }
     }
     public String validateCardNumber(String cardNumber) {
         String trimmedCardNumber = cardNumber.replace(" ", "");

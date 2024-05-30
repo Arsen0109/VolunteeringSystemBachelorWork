@@ -54,7 +54,7 @@ public class CommentService {
                 .orElseThrow(() -> new CommentNotFoundException("Error, comment with id=" + commentId + "not found!"));
 
         // Throw exception if creator user is not current user
-        if (!comment.getUser().equals(authService.getCurrentUser())) {
+        if (!comment.getUser().equals(authService.getCurrentUser()) && !authService.getCurrentUser().isAdmin()) {
             throw new VolunteeringSystemException("Error, to edit comments can only person who left them!");
         }
 
@@ -67,7 +67,7 @@ public class CommentService {
         Comment comment = commentRepository.findByCommentId(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("Error, comment with id=" + commentId + "not found!"));
         // Throw exception if creator user is not current user
-        if (!comment.getUser().equals(authService.getCurrentUser())) {
+        if (!comment.getUser().equals(authService.getCurrentUser()) && !authService.getCurrentUser().isAdmin()) {
             throw new VolunteeringSystemException("Error, to edit comments can only person who left them!");
         }
         commentRepository.delete(comment);

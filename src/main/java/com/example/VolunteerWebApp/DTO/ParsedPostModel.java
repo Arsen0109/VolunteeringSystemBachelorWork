@@ -1,4 +1,4 @@
-package com.example.VolunteerWebApp.model;
+package com.example.VolunteerWebApp.DTO;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,6 +15,5 @@ public class ParsedPostModel {
     private String url;
     private String description;
     private String platformName;
-
     private String iconUrl;
 }

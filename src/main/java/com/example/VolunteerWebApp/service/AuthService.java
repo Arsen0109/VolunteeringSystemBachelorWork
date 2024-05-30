@@ -4,8 +4,10 @@ import com.example.VolunteerWebApp.DTO.AuthResponse;
 import com.example.VolunteerWebApp.DTO.LoginRequest;
 import com.example.VolunteerWebApp.DTO.RefreshTokenRequest;
 import com.example.VolunteerWebApp.DTO.RegisterRequest;
+import com.example.VolunteerWebApp.VolunteerWebAppApplication;
 import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.entity.VerificationToken;
+import com.example.VolunteerWebApp.exception.VolunteeringSystemException;
 import com.example.VolunteerWebApp.model.NotificationEmail;
 import com.example.VolunteerWebApp.repository.UserRepository;
 import com.example.VolunteerWebApp.repository.VerificationTokenRepository;
@@ -44,7 +46,10 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setCreated(Instant.now());
         user.setEnabled(false);
-
+        user.setAdmin(false);
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new VolunteeringSystemException("Error, user with name=" + request.getUsername() + " already exists");
+        }
         userRepository.save(user);
 
         String token = generateVerificationToken(user);
@@ -89,6 +94,8 @@ public class AuthService {
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .refreshToken(refreshTokenService.generateRefreshToken().getToken())
                 .username(loginRequest.getUsername())
+                .isAdmin(userRepository.findByUsername(loginRequest.getUsername())
+                        .orElseThrow(() -> new VolunteeringSystemException("Error no user found")).isAdmin())
                 .build();
     }
 
@@ -100,6 +107,8 @@ public class AuthService {
                 .authToken(token)
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(refreshTokenRequest.getUsername())
+                .isAdmin(userRepository.findByUsername(refreshTokenRequest.getUsername())
+                        .orElseThrow(() -> new VolunteeringSystemException("Error no user found")).isAdmin())
                 .build();
     }
 }

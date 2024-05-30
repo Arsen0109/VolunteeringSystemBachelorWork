@@ -1,7 +1,8 @@
 package com.example.VolunteerWebApp.service;
 
 import com.example.VolunteerWebApp.entity.ParsedPost;
-import com.example.VolunteerWebApp.model.ParsedPostModel;
+import com.example.VolunteerWebApp.DTO.ParsedPostModel;
+import com.example.VolunteerWebApp.exception.VolunteeringSystemException;
 import com.example.VolunteerWebApp.repository.ParsedPostRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -130,7 +131,32 @@ public class ParsedPostService {
                 .collect(Collectors.toList()));
     }
 
+    @Transactional
     public List<ParsedPost> getAllParsedPosts() {
         return parsedPostRepository.findAll();
+    }
+
+    @Transactional
+    public ParsedPost getParsedPost(Long postId) {
+        return parsedPostRepository.findByPostId(postId)
+                .orElseThrow(() -> new VolunteeringSystemException("Error post with id: " + postId + " not found!"));
+    }
+
+    @Transactional
+    public ParsedPost updateParsedPost(Long postId, ParsedPostModel parsedPostModel) {
+        ParsedPost parsedPost =  getParsedPost(postId);
+        parsedPost.setPostName(parsedPostModel.getPostName());
+        parsedPost.setUrl(parsedPostModel.getUrl());
+        parsedPost.setDescription(parsedPostModel.getDescription());
+        parsedPost.setIconUrl(parsedPostModel.getIconUrl());
+        parsedPost.setPlatformName(parsedPostModel.getPlatformName());
+        return parsedPostRepository.save(parsedPost);
+    }
+
+    @Transactional
+    public ParsedPost deleteParsedPost(Long postId) {
+        ParsedPost parsedPost = getParsedPost(postId);
+        parsedPostRepository.delete(parsedPost);
+        return parsedPost;
     }
 }

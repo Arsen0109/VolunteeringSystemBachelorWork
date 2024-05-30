@@ -16,4 +16,5 @@ public class AuthResponse {
     private String refreshToken;
     private Instant expiresAt;
     private String username;
+    private boolean isAdmin;
 }

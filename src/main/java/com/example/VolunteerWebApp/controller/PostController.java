@@ -33,7 +33,7 @@ public class PostController {
     }
 
     @GetMapping("by-name/{postName}")
-    public ResponseEntity<Object> getPostById(@PathVariable String postName) {
+    public ResponseEntity<Object> getPostByName(@PathVariable String postName) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(postService.getPostByPostName(postName));
         } catch (PostNotFoundException e) {
