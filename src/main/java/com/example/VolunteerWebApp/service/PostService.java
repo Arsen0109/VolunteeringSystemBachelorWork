@@ -8,6 +8,7 @@ import com.example.VolunteerWebApp.exception.PostNotFoundException;
 import com.example.VolunteerWebApp.entity.Post;
 import com.example.VolunteerWebApp.exception.VolunteeringSystemException;
 import com.example.VolunteerWebApp.model.MonoBankJarRequest;
+import com.example.VolunteerWebApp.repository.CommentRepository;
 import com.example.VolunteerWebApp.repository.PostRepository;
 import com.example.VolunteerWebApp.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final AuthService authService;
 
     @Transactional
@@ -42,10 +45,11 @@ public class PostService {
 
     @Transactional
     public List<PostResponse> getAllPosts() {
-        return postRepository.findAll()
+        List<PostResponse> allPosts = new java.util.ArrayList<>(postRepository.findAll()
                 .stream()
-                .map(this::mapPostToPostResponse)
-                .collect(Collectors.toList());
+                .map(this::mapPostToPostResponse).toList());
+        allPosts.sort(Comparator.comparing(PostResponse::getCreatedDate).reversed());
+        return allPosts;
     }
 
     @Transactional
@@ -71,6 +75,7 @@ public class PostService {
         if (!post.getUser().equals(authService.getCurrentUser()) && !authService.getCurrentUser().isAdmin()) {
             throw new VolunteeringSystemException("Error, to edit comments can only person who left them!");
         }
+        commentRepository.deleteByPost(post);
         postRepository.delete(post);
         return mapPostToPostResponse(post);
     }
