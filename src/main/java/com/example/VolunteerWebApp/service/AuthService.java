@@ -4,7 +4,6 @@ import com.example.VolunteerWebApp.DTO.AuthResponse;
 import com.example.VolunteerWebApp.DTO.LoginRequest;
 import com.example.VolunteerWebApp.DTO.RefreshTokenRequest;
 import com.example.VolunteerWebApp.DTO.RegisterRequest;
-import com.example.VolunteerWebApp.VolunteerWebAppApplication;
 import com.example.VolunteerWebApp.entity.User;
 import com.example.VolunteerWebApp.entity.VerificationToken;
 import com.example.VolunteerWebApp.exception.VolunteeringSystemException;
@@ -47,6 +46,8 @@ public class AuthService {
         user.setCreated(Instant.now());
         user.setEnabled(false);
         user.setAdmin(false);
+
+
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new VolunteeringSystemException("Error, user with name=" + request.getUsername() + " already exists");
         }
